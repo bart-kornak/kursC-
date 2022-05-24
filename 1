@@ -1,0 +1,41 @@
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+
+namespace KursSelenium
+{
+    public class Tests
+    {
+        IWebDriver driver;
+        [SetUp]
+        public void Setup()
+        {
+            driver = new ChromeDriver(@"C:\Users\bkornak\source\repos\KursSelenium\KursSelenium\bin\Debug\netcoreapp3.1\Resources\");
+            driver.Manage().Window.Position = new System.Drawing.Point(8, 30);
+            driver.Manage().Window.Size = new System.Drawing.Size(1290, 730);
+            driver.Manage().Timeouts().ImplicitWait = System.TimeSpan.FromSeconds(5);
+            driver.Manage().Timeouts().PageLoad = System.TimeSpan.FromSeconds(5);
+        }
+        [Test]
+        public void Test1()
+        {
+            driver.Navigate().GoToUrl("https://google.pl");
+            ///IWebElement element = driver.FindElement(By.Id("L2AGLb"));
+            IWebElement searchField = driver.FindElement(By.XPath("//input[@class='gLFyf gsfi']"));
+            string searchEntry = "wszechświaty równoległe";
+            driver.FindElement(By.Id("L2AGLb"));
+            searchField.SendKeys(searchEntry);
+            searchField.Submit();
+            string title = "Wieloświat – Wikipedia, wolna encyklopedia";
+            driver.FindElement(By.XPath(".//*[text()='" + title + "']")).Click();
+            string entryURL = "https://pl.wikipedia.org/wiki/Wielo%C5%9Bwiat";
+            Assert.AreEqual(entryURL, driver.Url, "URL is not correct.");
+        }
+
+        [TearDown]
+        public void QuitDriver()
+        {
+            driver.Quit();
+        }
+    }
+}
